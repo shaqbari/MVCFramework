@@ -1,0 +1,4 @@
+{
+	"blood":"mvc.controller.BloodController",
+	"movie":"mvc.controller.MovieController"
+}

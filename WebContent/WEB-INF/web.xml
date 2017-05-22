@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  	
+  	<servlet>
+  		<servlet-name>dispatcher</servlet-name>
+  		<servlet-class>mvc.controller.DispatcherServlet</servlet-class>
+  	</servlet>
+  	<servlet-mapping>
+  		<servlet-name>dispatcher</servlet-name>
+  		<url-pattern>*.do</url-pattern>
+  		<!-- controller에서 모든 요청을 다 처리해야 한다 .
+  			앞에 blood가오던 movie가 오던 상관없어야 하므로 *.do를 쓴다.
+  			 끝이 .do로 끝나기만 하면된다.
+  		 	restful에서는 /를 쓴다. -->
+  	</servlet-mapping>
+  	
+  
+</web-app>
