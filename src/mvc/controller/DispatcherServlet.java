@@ -1,8 +1,11 @@
 package mvc.controller;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -11,6 +14,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import mvc.model.BloodAdviser;
 import mvc.model.MovieAdviser;
@@ -24,15 +31,46 @@ public class DispatcherServlet extends HttpServlet{
 	//Post, get중 어떤 방식의 요청이 들어올지 예층불가하므로, 실제 요청을 처리하는 메소드를 별로도 정의해 놓자!!
 	
 	FileInputStream fis;//응용이기때문에 경로를 정확히 명시해줘야 한다.
+	InputStreamReader is;
+	BufferedReader buffr; //업그레이드해서 한줄씩 읽자
+	JSONObject jsonObject;
 	
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		//jsp에서의 application 내장객체의 자료형!!
 		ServletContext context=config.getServletContext();
-		String realPath=context.getRealPath("/WEP-INF/mapping/controller-mapping.json");//플랫폼에 관계없도록 realpath를 이용한다.
+		//String realPath=context.getRealPath("/WEB-INF/mapping/controller-mapping.json");//플랫폼에 관계없도록 realpath를 이용한다.
+		//주소도 web.xml이용해서 cofig에서 얻어온다.
+		String realPath=context.getRealPath(config.getInitParameter("configLocatoin"));
 		System.out.println(realPath);
 		
-		//fis=new FileInputStream(new File(pathname));
+		try {
+			fis=new FileInputStream(new File(realPath));
+			is=new InputStreamReader(fis);
+			buffr=new BufferedReader(is);
+			
+			String str;
+			StringBuffer sb=new StringBuffer();
+			while (true) {
+				str=buffr.readLine();
+				if (str==null)break;
+				sb.append(str);
+			}
+			System.out.println(sb.toString());
+			//sb에 json문자열이 모두 누적되어 있으므로, 이 데이터를 대상으로 parsing하자!!
+			JSONParser jsonParser=new JSONParser();
+			jsonObject=(JSONObject) jsonParser.parse(sb.toString());
+			
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	@Override
@@ -85,10 +123,11 @@ public class DispatcherServlet extends HttpServlet{
 		
 		
 		
-		Controller controller=null;
-		if (uri.equals("/blood.do")) {
+		//Controller controller=null;
+		/*if (uri.equals("/blood.do")) {
 			try {
-				Class controllerClass=Class.forName("mvc.controller.BloodController");
+				//Class controllerClass=Class.forName("mvc.controller.BloodController");
+				Class controllerClass=Class.forName((String) jsonObject.get(uri));
 				controller=(Controller)controllerClass.newInstance();//인스턴스 생성 메소드
 				
 			} catch (ClassNotFoundException e) {
@@ -107,10 +146,10 @@ public class DispatcherServlet extends HttpServlet{
 			//BloodController controller=new BloodController();
 			//controller.execute(request, response);
 			
-			/*String blood=request.getParameter("blood");
+			String blood=request.getParameter("blood");
 			BloodAdviser adviser=new BloodAdviser();
 			msg=adviser.getAdvice(blood);
-			dis=request.getRequestDispatcher("/blood/result.jsp");*/
+			dis=request.getRequestDispatcher("/blood/result.jsp");
 			
 		}else if(uri.equals("/movie.do")){
 			try {
@@ -133,17 +172,57 @@ public class DispatcherServlet extends HttpServlet{
 			//MovieController controller=new MovieController();
 			//controller.execute(request, response);
 			
-			/*String movie=request.getParameter("movie");		
+			String movie=request.getParameter("movie");		
 			MovieAdviser adviser=new MovieAdviser();
 			msg=adviser.getAdvice(movie);
-			dis=request.getRequestDispatcher("/movie/result.jsp");*/
+			dis=request.getRequestDispatcher("/movie/result.jsp");
 			
-		}
+		}*/
 		//최상위 객체의 메소드를 호출하면 오버라이드된 자식것이 적용된다. 이게 다형성이다.
+				
+		Controller controller=null;
+		try {
+			Class controllerClass = Class.forName((String) jsonObject.get(uri));
+			controller=(Controller)controllerClass.newInstance();//인스턴스 생성 메소드
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		controller.execute(request, response);
 		
 	
 		
+	}
+	
+	@Override
+	public void destroy() {
+		if (buffr!=null) {
+			try {
+				buffr.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (is!=null) {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (fis!=null) {
+			try {
+				fis.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 }
