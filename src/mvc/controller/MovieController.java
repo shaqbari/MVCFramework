@@ -16,7 +16,7 @@ public class MovieController implements Controller{
 		movieAdviser=new MovieAdviser();
 	}
 	
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String movie=request.getParameter("movie");
 		
 		//3단계 객체에 일 시키기
@@ -26,10 +26,15 @@ public class MovieController implements Controller{
 		request.setAttribute("data", msg);
 		
 		//5단계 결과 보여주기
-		RequestDispatcher dis=request.getRequestDispatcher("/movie/result.jsp");
-		dis.forward(request, response);
+		/*RequestDispatcher dis=request.getRequestDispatcher("/movie/result.jsp");
+		dis.forward(request, response);*/
 		
+		return "/result/movie";
 		
-		
+	}
+
+	@Override
+	public boolean isForward() {
+		return true;
 	}
 }

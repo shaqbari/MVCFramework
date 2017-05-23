@@ -12,5 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  *******최상위 객체로 정의하면 구현강제뿐 아니라, 같은 자료형으로 묶을 수 있다!!!!**********
  */
 public interface Controller {
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+	public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+
+	public boolean isForward();//forward할지 redirect할지 알려주는 메소드
 }

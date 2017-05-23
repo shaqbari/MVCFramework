@@ -30,7 +30,7 @@ public class BloodController implements Controller{
 		adviser=new BloodAdviser();
 	}
 	
-	public void execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	public String execute(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		String blood=request.getParameter("blood");
 
 		//3단계: 알맞은 비즈니스 로직 객체에 일 시킨다.
@@ -40,9 +40,16 @@ public class BloodController implements Controller{
 		request.setAttribute("data", msg);
 		
 		//5단계:
-		RequestDispatcher dis=null;
+		/*RequestDispatcher dis=null;
 		dis=request.getRequestDispatcher("/movie/result.jsp");
-		dis.forward(request, response);
+		dis.forward(request, response);*/
+		
+		return "/result/blood";
+	}
+
+	@Override
+	public boolean isForward() {
+		return true;
 	}
 	
 }

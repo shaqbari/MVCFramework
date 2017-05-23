@@ -181,8 +181,10 @@ public class DispatcherServlet extends HttpServlet{
 		//최상위 객체의 메소드를 호출하면 오버라이드된 자식것이 적용된다. 이게 다형성이다.
 				
 		Controller controller=null;
+		JSONObject controllerObj=(JSONObject)jsonObject.get("controllerMapping");
+		JSONObject viewObj=(JSONObject)jsonObject.get("viewMapping");
 		try {
-			Class controllerClass = Class.forName((String) jsonObject.get(uri));
+			Class controllerClass = Class.forName((String) controllerObj.get(uri));
 			controller=(Controller)controllerClass.newInstance();//인스턴스 생성 메소드
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -194,10 +196,15 @@ public class DispatcherServlet extends HttpServlet{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		controller.execute(request, response);
-		
-	
-		
+		String key=controller.execute(request, response);//넘겨받은 주소로 json에서 검색
+				
+		//5단계 결과 보여주기 forward와 redirect의 조건을 봐서 처리한다.
+		if(controller.isForward()){
+			RequestDispatcher dis=request.getRequestDispatcher((String)viewObj.get(key));//보내는 주소도 설정파일의 가상의 이름으로 관리하자!! ControllerMapping+ViewMapping
+			dis.forward(request, response);
+		}else{
+			response.sendRedirect((String)viewObj.get(key));
+		}
 	}
 	
 	@Override
