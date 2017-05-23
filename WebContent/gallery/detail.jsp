@@ -1,9 +1,10 @@
+<%@page import="gallery.model.Gallery"%>
 <%@page import="board.model.Board"%>
 <%@page import="board.model.BoardDAO"%>
 <%@ page contentType="text/html;charset=utf-8"%>
 
 <%
-	Board dto=(Board)request.getAttribute("board");
+	Gallery dto=(Gallery)request.getAttribute("gallery");
 	
 
 %>
@@ -44,7 +45,7 @@ img{border:0px}
 	function edit(){
 		
 		if(confirm("수정하실래요?")){ //window에 속한 객체, 확인누르면 true반환, 내용이 많기 때문에 post방식이어야 한다.
-			form1.action="/board/edit.do";//요청주소
+			form1.action="/gallery/edit.do";//요청주소
 			form1.submit();
 		}	
 		
@@ -55,7 +56,7 @@ img{border:0px}
 	function del(){
 		
 		if(confirm("삭제하실래요?")){ //window에 속한 객체, 확인누르면 true반환
-			location.href="/board/delete.do?board_id=<%=dto.getBoard_id()%>";
+			location.href="/gallery/delete.do?gallery_id=<%=dto.getGallery_id()%>";
 		}	
 		
 	}
@@ -66,7 +67,7 @@ img{border:0px}
 <body>
 <form name="form1" method="post">
 	<%-- <input type="text" name="board_id" value="<%=dto.getBoard_id() %>" /> 이렇게하면 클라이언트에게 노출되고 수정가능하다.--%>
-	<input type="hidden" name="board_id" value="<%=dto.getBoard_id() %>" /> <!--hidden을 이용하자  소스보기로는 확인가능하다 request.setAttribute도 가능하다.-->
+	<input type="hidden" name="gallery_id" value="<%=dto.getGallery_id() %>" /> <!--hidden을 이용하자  소스보기로는 확인가능하다 request.setAttribute도 가능하다.-->
 	<table id="box" align="center" width="603" border="0" cellpadding="0" cellspacing="0">
 	  <tr>
 	    <td><img src="/board/images/ceil.gif" width="603" height="25"></td>

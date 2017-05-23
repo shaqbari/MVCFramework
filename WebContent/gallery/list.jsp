@@ -1,12 +1,12 @@
-<%@page import="board.model.Board"%>
+<%@page import="Common.file.FileManager"%>
+<%@page import="gallery.model.Gallery"%>
 <%@page import="java.util.List"%>
 <%@page import="java.sql.ResultSet"%>
-<%@page import="board.model.BoardDAO"%>
 <%@ page contentType="text/html;charset=utf-8"%>
 
 <%
 	
-	List<Board> list=(List)request.getAttribute("list");
+	List<Gallery> list=(List)request.getAttribute("list");
 
 %>
 
@@ -87,23 +87,24 @@ img{border:0px}
 <body>
 <table id="box" align="center" width="603" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td colspan="5"><img src="/board/images/ceil.gif" width="603" height="25"></td>
+    <td colspan="6"><img src="/board/images/ceil.gif" width="603" height="25"></td>
   </tr>
   <tr>
-    <td height="2" colspan="5" bgcolor="#6395FA"><img src="/board/images/line_01.gif"></td>
+    <td height="2" colspan="6" bgcolor="#6395FA"><img src="/board/images/line_01.gif"></td>
   </tr>
   <tr id="title" align="center">
     <td width="50" height="20">번호</td>
-    <td width="303" height="20">제목</td>
+    <td width="50" height="20">이미지</td>
+    <td width="203" height="20">제목</td>
     <td width="100" height="20">글쓴이</td>
     <td width="100" height="20">날짜</td>
     <td width="50" height="20">조회수</td>
   </tr>
   <tr>
-    <td height="1" colspan="5" bgcolor="#CCCCCC"></td>
+    <td height="1" colspan="6" bgcolor="#CCCCCC"></td>
   </tr>
 	<tr>	
-		<td colspan="5" id="list">
+		<td colspan="6" id="list">
 		  <table width="100%" border="0" cellpadding="0" cellspacing="0">
 		  
 		  <% for(int i=0; i<pageSize; i++){ %>
@@ -114,8 +115,9 @@ img{border:0px}
 			  
 				
 				<td width="50"> <%=num-- %> </td>
-			<% Board dto=list.get(curPos++); %>
-				<td width="303"><a href="detail.do?board_id=<%=dto.getBoard_id()%>"><%=dto.getTitle() %></a></td>
+			<% Gallery dto=list.get(curPos++); %>
+				<td width="50" height="50"><img width="50" height="50" src="/data/<%=dto.getGallery_id()+"."+FileManager.getExt(dto.getUserFile()) %>"/></td>
+				<td width="203"><a href="detail.do?gallery_id=<%=dto.getGallery_id()%>"><%=dto.getTitle() %></a></td>
 				<td width="100"><%=dto.getWriter() %></td>
 				<td width="100"><%=dto.getRegdate().substring(0, 10)%></td>
 				<td width="50"><%=dto.getHit() %></td>
@@ -123,7 +125,7 @@ img{border:0px}
 			    
 		    </tr>
 			<tr>
-				<td height="1" colspan="5" background="/board/images/line_dot.gif"></td>
+				<td height="1" colspan="6" background="/board/images/line_dot.gif"></td>
 			</tr>
 		 <%} %>
 		  	
@@ -131,27 +133,27 @@ img{border:0px}
 		  </table>		</td>
 	</tr>
   <tr>
-    <td id="paging" height="20" colspan="5" align="center">
+    <td id="paging" height="20" colspan="6" align="center">
     	<%if(firstPage-1>0){ //이전페이지가 있다면 %>
-    	<a href="/board/list.jsp?currentPage=<%=firstPage-1%>">◀</a>
+    	<a href="/board/list.do?currentPage=<%=firstPage-1%>">◀</a>
 		<%}else{ %>
 		<a href="javascript:alert('처음페이지 입니다.');">◀</a> 
 		<%} %>
 		
 		<%for(int i=firstPage; i<=lastPage; i++){ %>		
 			<%if(i>totalPage)break;%><!-- 내가 가진 페이지보다 크면 그만 찍어라 -->
-   			<a <%if(i==currentPage){ %>class="pageStyle"<%} %> href="/board/list.jsp?currentPage=<%=i%>">[<%=i%>]</a> <!--get방식으로 현재의 페이지를 요청한다. -->
+   			<a <%if(i==currentPage){ %>class="pageStyle"<%} %> href="/gallery/list.do?currentPage=<%=i%>">[<%=i%>]</a> <!--get방식으로 현재의 페이지를 요청한다. -->
     	<%} %>
     	
     	<%if(lastPage+1<totalPage){ //다음페이지가 있다면 %>
-    		<a href="/board/list.jsp?currentPage=<%=lastPage+1%>">▶</a>
+    		<a href="/gallery/list.do?currentPage=<%=lastPage+1%>">▶</a>
     	<%}else{ %>
     		<a href="javascript:alert('마지막페이지 입니다.');">▶</a> 
     	<%} %>
     </td>
   </tr>
   <tr>
-    <td height="20" colspan="5" align="right" style="padding-right:2px;">
+    <td height="20" colspan="6" align="right" style="padding-right:2px;">
 	<table width="160" border="0" cellpadding="0" cellspacing="0">      
       <tr>
         <td width="70">
@@ -167,13 +169,13 @@ img{border:0px}
     </table></td>
   </tr>
   <tr>
-    <td height="30" colspan="5" align="right" style="padding-right:2px;"><a href="write.jsp"><img src="/board/images/write_btin.gif" width="61" height="20" border="0"></a></td>
+    <td height="30" colspan="6" align="right" style="padding-right:2px;"><a href="write.jsp"><img src="/board/images/write_btin.gif" width="61" height="20" border="0"></a></td>
   </tr>
   <tr>
-    <td height="1" colspan="5" bgcolor="#CCCCCC"></td>
+    <td height="1" colspan="6" bgcolor="#CCCCCC"></td>
   </tr>
   <tr>
-    <td height="20" colspan="5" align="center" id="copyright">Copyright zino All Rights Reserved </td>
+    <td height="20" colspan="6" align="center" id="copyright">Copyright zino All Rights Reserved </td>
   </tr>
 </table>
 </body>

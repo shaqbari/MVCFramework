@@ -126,7 +126,7 @@ public class GalleryDAO {
 		try {			
 			con=manager.getConnection();
 			
-			String sql="select * from Gallery order by board_id desc";
+			String sql="select * from Gallery order by gallery_id desc";
 			pstmt=con.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			rs=pstmt.executeQuery();
 			
@@ -165,7 +165,7 @@ public class GalleryDAO {
 		try {
 			con=manager.getConnection();
 			
-			String sql="select * from board where Gallery_id=?";
+			String sql="select * from gallery where Gallery_id=?";
 			pstmt=con.prepareStatement(sql);
 			pstmt.setInt(1, board_id);
 			rs=pstmt.executeQuery();//id를 이용하기때문에 1건만 검색된다.
@@ -203,7 +203,7 @@ public class GalleryDAO {
 		try {
 			con=manager.getConnection();
 			
-			String sql="delete from board where Gallery_id=?";
+			String sql="delete from gallery where Gallery_id=?";
 			pstmt=con.prepareStatement(sql);
 			pstmt.setInt(1, board_id);
 			result=pstmt.executeUpdate();//id를 이용하기때문에 1건만 검색된다.
@@ -230,7 +230,7 @@ public class GalleryDAO {
 		try {
 			con=manager.getConnection();
 
-			String sql="update board set title=?, writer=?, content=? where Gallery_id=? ";
+			String sql="update gallery set title=?, writer=?, content=? where Gallery_id=? ";
 			pstmt=con.prepareStatement(sql);
 			pstmt.setString(1, dto.getTitle());
 			pstmt.setString(2, dto.getWriter());
