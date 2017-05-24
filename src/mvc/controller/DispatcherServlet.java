@@ -42,7 +42,7 @@ public class DispatcherServlet extends HttpServlet{
 		//String realPath=context.getRealPath("/WEB-INF/mapping/controller-mapping.json");//플랫폼에 관계없도록 realpath를 이용한다.
 		//주소도 web.xml이용해서 cofig에서 얻어온다.
 		String realPath=context.getRealPath(config.getInitParameter("configLocatoin"));
-		System.out.println(realPath);
+		System.out.println("json설정파일 경로는"+realPath);
 		
 		try {
 			fis=new FileInputStream(new File(realPath));
@@ -56,7 +56,7 @@ public class DispatcherServlet extends HttpServlet{
 				if (str==null)break;
 				sb.append(str);
 			}
-			System.out.println(sb.toString());
+			System.out.println("json설정파일 내용은"+sb.toString());
 			//sb에 json문자열이 모두 누적되어 있으므로, 이 데이터를 대상으로 parsing하자!!
 			JSONParser jsonParser=new JSONParser();
 			jsonObject=(JSONObject) jsonParser.parse(sb.toString());
@@ -97,7 +97,7 @@ public class DispatcherServlet extends HttpServlet{
 		
 		//2단계 요청을 분석한다(어떤 요청이 들어올지 모르니깐)
 		String uri=request.getRequestURI();
-		System.out.println(uri);
+		System.out.println("요청들어온 uri는"+uri);
 		
 		
 		/*RequestDispatcher dis=null;
